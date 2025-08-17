@@ -14,8 +14,8 @@ public class RegisterServices
 {
     public void Onload(IServiceCollection services, IConfiguration configuration)
     {
-        
-        RegisterLocalDb(services,configuration);
+
+        RegisterLocalDb(services, configuration);
         AllServices(services);
         ServiceOnLoad(services);
         RegisterSwagger(services);
@@ -23,7 +23,18 @@ public class RegisterServices
 
     public static void RegisterLocalDb(IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration["connectionStrings:localDb"];
+        var localServer = Environment.GetEnvironmentVariable("LOCAL_SERVER");
+        var localUserId = Environment.GetEnvironmentVariable("LOCAL_USER_ID");
+
+        if (string.IsNullOrEmpty(localServer) || string.IsNullOrEmpty(localUserId))
+        {
+            throw new InvalidOperationException("Missing environment variable LOCAL_SERVER or LOCAL_USER_ID");
+        }
+
+    var connectionString = configuration["connectionStrings:localDb"]
+        .Replace("{LOCAL_SERVER}", localServer)
+        .Replace("{LOCAL_USER_ID}", localUserId);
+    
         services.AddDbContext<ApplicationDatabase>(options =>
             options.UseSqlServer(connectionString, provider => provider.EnableRetryOnFailure()));
     }
@@ -69,8 +80,11 @@ public class RegisterServices
         services.AddEndpointsApiExplorer();
         services.AddScoped(typeof(IRepository<TestModel>), typeof(TestRepositoryData));
         services.AddScoped<ITestService, TestService>();
+        services.AddScoped(typeof(ICategoryRepository<Category>), typeof(CategoryRepository));
         services.AddScoped<TestDataCommandHandler>();
+        services.AddScoped<CreateCategoryCommandHandler>();
         services.AddMediatR(typeof(Program).Assembly);
+        services.AddScoped<ICategoryService, CategoryService>();
     }
 }
 

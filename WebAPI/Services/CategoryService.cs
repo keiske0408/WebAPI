@@ -6,8 +6,8 @@ namespace WebAPI.Services;
 public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository<Category> _categoryRepository;
-
-    public CategoryService(ICategoryRepository<Category> categoryRepository)
+    
+    public CategoryService(ICategoryRepository<Category> categoryRepository, ITestService testService)
     {
         _categoryRepository = categoryRepository;
     }
