@@ -20,7 +20,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
-    [Route("get-all-test-data")]
+    [Route("get-all-category-data")]
     public async Task<IActionResult> GetAllData()
     {
         var data = await _service.GetAllDataFromCategoryModel();
