@@ -7,6 +7,7 @@ using WebAPI.Models;
 using WebAPI.Repositories;
 using WebAPI.Repositories.TestRepository;
 using WebAPI.Services;
+using WebAPI.Services.Tokenization;
 
 namespace WebAPI.config;
 
@@ -85,6 +86,7 @@ public class RegisterServices
         services.AddScoped<CreateCategoryCommandHandler>();
         services.AddMediatR(typeof(Program).Assembly);
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ITokenService,TokenService>();
     }
 }
 
